@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 // @Documented : 해당 어노테이션을 javadoc에 포함
 @Component
 // @Component :  Bean Configuration 파일에 Bean을 따로 등록하지 않아도 사용할 수 있음. 빈 등록자체를 빈 클래스 자체에다가 할 수 있다는 의미
-//그냥 이름만 WebAdapter인 어노테이션이지 별 의미 없음.
+//UseCase도 그냥 논리적으로 정의. 그냥 사용 예. Service의 예가 될것임. 말 그대로 사용하는 예
 public @interface UseCase {
     @AliasFor(annotation = Component.class)
     String value() default "";

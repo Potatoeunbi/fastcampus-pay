@@ -18,6 +18,7 @@ public class MembershipJpaEntity {
 
     @Id
     @Generated
+    //@Generated 알아서 jpa가 관리해줌.
     private Long membershipId;
 
     private String name;
@@ -26,10 +27,17 @@ public class MembershipJpaEntity {
 
     private String email;
 
-    private String isValid;
+    private boolean isValid;
 
-    private String isCorp;
+    private boolean isCorp;
 
+    public MembershipJpaEntity(String name, String address, String email, boolean isValid, boolean isCorp) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.isValid = isValid;
+        this.isCorp = isCorp;
+    }
 
     @Override
     public String toString() {

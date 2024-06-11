@@ -18,11 +18,11 @@ public class RegisterMembershipController {
     @PostMapping(path = "/membership/register")
     Membership registerMembership(@RequestBody final RegisterMembershipRequest request) {
 
-        //request ~~
-        //request -> Command
-        // Usecase ~~(request를 받는게 아니라, command를 받아야함.)
-        // 이렇게 하는 이유 : request 값이 바뀌더라도, 추가적으로 값을 더 추가하더라도. command라는 중간 계층을 이용해서 쉽게 호환성을 맞출 수 있음. 그래서 command를 이용
-
+        /* request ~~
+        request -> Command
+        Usecase ~~(request를 받는게 아니라, command를 받아야함.)
+        이렇게 하는 이유 : request 값이 바뀌더라도, 추가적으로 값을 더 추가하더라도. command라는 중간 계층을 이용해서 쉽게 호환성을 맞출 수 있음. 그래서 command를 이용
+         */
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.getName())
                 .address(request.getAddress())

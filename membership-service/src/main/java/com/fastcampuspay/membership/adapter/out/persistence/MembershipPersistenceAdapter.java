@@ -1,5 +1,6 @@
 package com.fastcampuspay.membership.adapter.out.persistence;
 
+import com.fastcampuspay.membership.application.port.out.FindMembershipPort;
 import com.fastcampuspay.membership.application.port.out.RegisterMembershipPort;
 import com.fastcampuspay.membership.domain.Membership;
 import common.PersistenceAdapter;
@@ -19,11 +20,11 @@ import lombok.RequiredArgsConstructor;
  - 출력 모델이 영속성 어댑터가 아니라 애플리케이션 코어에 위치하는 것이 중요하다. */
 @RequiredArgsConstructor
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
-public class MembershipPersistenceAdapter implements RegisterMembershipPort {
+public class MembershipPersistenceAdapter implements RegisterMembershipPort, FindMembershipPort {
     private final SpringDataMembershipRepository membershipRepository;
     @Override
-    public void createMembership(Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
-        membershipRepository.save(
+    public MembershipJpaEntity createMembership(Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
+        return membershipRepository.save(
                 new MembershipJpaEntity(
                         membershipName.getNameValue(),
                         membershipEmail.getEmailValue(),
@@ -32,5 +33,10 @@ public class MembershipPersistenceAdapter implements RegisterMembershipPort {
                         membershipIsCorp.isCorpValue()
                 )
         );
+    }
+
+    @Override
+    public MembershipJpaEntity findMembership(Membership.MembershipId membershipId) {
+        return membershipRepository.getById(Long.parseLong(membershipId.getMembershipId()));
     }
 }

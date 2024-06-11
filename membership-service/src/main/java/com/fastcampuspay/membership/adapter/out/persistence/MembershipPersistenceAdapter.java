@@ -31,6 +31,6 @@ public class MembershipPersistenceAdapter implements RegisterMembershipPort {
                         membershipIsValid.isValidValue(),
                         membershipIsCorp.isCorpValue()
                 )
-        )
+        );
     }
 }

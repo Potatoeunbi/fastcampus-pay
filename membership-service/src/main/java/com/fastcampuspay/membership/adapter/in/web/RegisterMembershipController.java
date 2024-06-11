@@ -1,7 +1,7 @@
 package com.fastcampuspay.membership.adapter.in.web;
 
 import com.fastcampuspay.membership.application.port.in.RegisterMembershipCommand;
-import com.fastcampuspay.membership.application.port.in.RegisterMembershipUsecase;
+import com.fastcampuspay.membership.application.port.in.RegisterMembershipUseCase;
 import com.fastcampuspay.membership.domain.Membership;
 import common.WebAdapter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class RegisterMembershipController {
-    private final RegisterMembershipUsecase registerMembershipUsecase;
+    private final RegisterMembershipUseCase registerMembershipUsecase;
 
     @PostMapping(path = "/membership/register")
     Membership registerMembership(@RequestBody final RegisterMembershipRequest request) {

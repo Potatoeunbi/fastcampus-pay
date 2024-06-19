@@ -3,9 +3,9 @@ package com.fastcampuspay.membership.application.service;
 import com.fastcampuspay.common.UseCase;
 import com.fastcampuspay.membership.adapter.out.persistence.MembershipJpaEntity;
 import com.fastcampuspay.membership.adapter.out.persistence.MembershipMapper;
-import com.fastcampuspay.membership.application.port.in.RegisterMembershipCommand;
-import com.fastcampuspay.membership.application.port.in.RegisterMembershipUseCase;
-import com.fastcampuspay.membership.application.port.out.RegisterMembershipPort;
+import com.fastcampuspay.membership.application.port.in.ModifyMembershipCommand;
+import com.fastcampuspay.membership.application.port.in.ModifyMembershipUseCase;
+import com.fastcampuspay.membership.application.port.out.ModifyMembershipPort;
 import com.fastcampuspay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;
 
@@ -18,13 +18,13 @@ import javax.transaction.Transactional;
  1. 설명 : 클래스 단위 혹은 메서드 단위에 선언해주면 된다.
  2. 우선순위 : 클래스 메소드 -> 클래스 -> 인터페이스 메소드 -> 인터페이스
  */
-public class RegisterMembershipService implements RegisterMembershipUseCase {
+public class ModifyMembershipService implements ModifyMembershipUseCase {
 
-    private final RegisterMembershipPort registerMembershipPort;
+    private final ModifyMembershipPort modifyMembershipPort;
     private final MembershipMapper membershipMapper;
 
     @Override
-    public Membership registerMembership(RegisterMembershipCommand command) {
+    public Membership modifyMembership(ModifyMembershipCommand command) {
 
         //command -> DB
 
@@ -33,7 +33,8 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
         // external system
         // port, adapter를 이용해서 통신해야 함.
 
-        MembershipJpaEntity jpaEntity = registerMembershipPort.createMembership(
+        MembershipJpaEntity jpaEntity = modifyMembershipPort.modifyMembership(
+                new Membership.MembershipId(command.getMembershipId()),
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
                 new Membership.MembershipAddress(command.getAddress()),

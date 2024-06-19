@@ -1,9 +1,10 @@
 package com.fastcampuspay.membership.adapter.out.persistence;
 
+import com.fastcampuspay.common.PersistenceAdapter;
 import com.fastcampuspay.membership.application.port.out.FindMembershipPort;
+import com.fastcampuspay.membership.application.port.out.ModifyMembershipPort;
 import com.fastcampuspay.membership.application.port.out.RegisterMembershipPort;
 import com.fastcampuspay.membership.domain.Membership;
-import common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  - 출력 모델이 영속성 어댑터가 아니라 애플리케이션 코어에 위치하는 것이 중요하다. */
 @RequiredArgsConstructor
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
-public class MembershipPersistenceAdapter implements RegisterMembershipPort, FindMembershipPort {
+public class MembershipPersistenceAdapter implements RegisterMembershipPort, FindMembershipPort, ModifyMembershipPort {
     private final SpringDataMembershipRepository membershipRepository;
     @Override
     public MembershipJpaEntity createMembership(Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
@@ -38,5 +39,17 @@ public class MembershipPersistenceAdapter implements RegisterMembershipPort, Fin
     @Override
     public MembershipJpaEntity findMembership(Membership.MembershipId membershipId) {
         return membershipRepository.getById(Long.parseLong(membershipId.getMembershipId()));
+    }
+
+    @Override
+    public MembershipJpaEntity modifyMembership(Membership.MembershipId membershipId, Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
+        MembershipJpaEntity entity = membershipRepository.getById(Long.parseLong(membershipId.getMembershipId()));
+        entity.setName(membershipName.getNameValue());
+        entity.setAddress(membershipAddress.getAddressValue());
+        entity.setEmail(membershipEmail.getEmailValue());
+        entity.setCorp(membershipIsCorp.isCorpValue());
+        entity.setValid(membershipIsValid.isValidValue());
+
+        return membershipRepository.save(entity);
     }
 }

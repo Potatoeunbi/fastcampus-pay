@@ -1,5 +1,7 @@
 package com.fastcampuspay.banking.adapter.out.persistence;
 
+import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
+import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.PersistenceAdapter;
 import com.fastcampuspay.membership.application.port.out.FindMembershipPort;
 import com.fastcampuspay.membership.application.port.out.ModifyMembershipPort;
@@ -21,35 +23,19 @@ import lombok.RequiredArgsConstructor;
  - 출력 모델이 영속성 어댑터가 아니라 애플리케이션 코어에 위치하는 것이 중요하다. */
 @RequiredArgsConstructor
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
-public class RegisteredBankAccountPersistenceAdapter implements RegisterMembershipPort, FindMembershipPort, ModifyMembershipPort {
-    private final SpringDataMembershipRepository membershipRepository;
+public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAccountPort{
+    private final SpringDataRegisteredBankRepository bankAccountRepository;
+
     @Override
-    public RegisteredBankAccountJpaEntity createMembership(Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
-        return membershipRepository.save(
+    public RegisteredBankAccountJpaEntity createRegisteredBankAccount(RegisteredBankAccount.MembershipId membershipId, RegisteredBankAccount.BankName bankName, RegisteredBankAccount.BankAccountNumber bankAccountNumber, RegisteredBankAccount.LinkedStatusIsValid linkedStatusIsValid) {
+        return bankAccountRepository.save(
                 new RegisteredBankAccountJpaEntity(
-                        membershipName.getNameValue(),
-                        membershipEmail.getEmailValue(),
-                        membershipAddress.getAddressValue(),
-                        membershipIsValid.isValidValue(),
-                        membershipIsCorp.isCorpValue()
+                        membershipId.getMembershipId(),
+                        bankName.getBankName(),
+                        bankAccountNumber.getBankAccountNumber(),
+                        linkedStatusIsValid.isLinkedStatusIsValid()
                 )
+
         );
-    }
-
-    @Override
-    public RegisteredBankAccountJpaEntity findMembership(Membership.MembershipId membershipId) {
-        return membershipRepository.getById(Long.parseLong(membershipId.getMembershipId()));
-    }
-
-    @Override
-    public RegisteredBankAccountJpaEntity modifyMembership(Membership.MembershipId membershipId, Membership.MembershipName membershipName, Membership.MembershipEmail membershipEmail, Membership.MembershipAddress membershipAddress, Membership.MembershipIsValid membershipIsValid, Membership.MembershipIsCorp membershipIsCorp) {
-        RegisteredBankAccountJpaEntity entity = membershipRepository.getById(Long.parseLong(membershipId.getMembershipId()));
-        entity.setName(membershipName.getNameValue());
-        entity.setAddress(membershipAddress.getAddressValue());
-        entity.setEmail(membershipEmail.getEmailValue());
-        entity.setCorp(membershipIsCorp.isCorpValue());
-        entity.setValid(membershipIsValid.isValidValue());
-
-        return membershipRepository.save(entity);
     }
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@NoArgsConstructor : 파라미터가 없는 디폴트 생성자를 생성
 public class RegisterBankAccountRequest {
-    private String name;
-    private String address;
-    private String email;
-    private boolean isCorp;
+    private String membershipId;
+    private String bankName;
+    private String bankAccountNumber;
+    private boolean isValid;
 }

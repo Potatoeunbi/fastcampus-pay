@@ -2,8 +2,6 @@ package com.fastcampuspay.banking.application.port.out;
 
 import com.fastcampuspay.banking.adapter.out.persistence.RegisteredBankAccountJpaEntity;
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
-import com.fastcampuspay.membership.adapter.out.persistence.MembershipJpaEntity;
-import com.fastcampuspay.membership.domain.Membership;
 
 public interface RegisterBankAccountPort {
 

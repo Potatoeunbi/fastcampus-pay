@@ -1,7 +1,6 @@
 package com.fastcampuspay.banking.adapter.out.persistence;
 
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
-import com.fastcampuspay.membership.domain.Membership;
 import org.springframework.stereotype.Component;
 
 @Component //Bean으로써 동작해야 함으로.

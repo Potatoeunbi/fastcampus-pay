@@ -3,10 +3,6 @@ package com.fastcampuspay.banking.adapter.out.persistence;
 import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.PersistenceAdapter;
-import com.fastcampuspay.membership.application.port.out.FindMembershipPort;
-import com.fastcampuspay.membership.application.port.out.ModifyMembershipPort;
-import com.fastcampuspay.membership.application.port.out.RegisterMembershipPort;
-import com.fastcampuspay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter

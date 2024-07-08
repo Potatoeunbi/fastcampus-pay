@@ -23,7 +23,21 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
     private final RegisteredBankAccountMapper mapper;
 
     @Override
-    public RegisteredBankAccount registerMembership(RegisterBankAccountCommand membership) {
+    public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand membership) {
+
+        // 은행 계좌를 등록해야하는 서비스 (비즈니스 로직)
+
+        // (멤버 서비스도 확인?) 여기서는 skip
+
+        // 1. 등록된 계좌인지 확인한다.
+        // 외부의 은행에 이 계좌 정산인지? 확인을 해야해요.
+        // Biz Logic -> External System
+        // Port -> Adapter -> External System
+
+        // 2. 등록가능한 계좌라면, 등록한다. 성공하면, 등록에 성공한 등록 정보를 리턴
+        // 2-1. 등록가능하지 않은 계좌라면, 에러를 리턴
+
+
         return null;
     }
 }

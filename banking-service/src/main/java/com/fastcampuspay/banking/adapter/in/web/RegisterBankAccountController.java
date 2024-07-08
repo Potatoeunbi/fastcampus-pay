@@ -30,7 +30,7 @@ public class RegisterBankAccountController {
                 .isValid(true)
                 .build();
 
-        return registeredBankAccountUseCase.registerMembership(command);
+        return registeredBankAccountUseCase.registerBankAccount(command);
     }
 
 }

@@ -30,6 +30,12 @@ public class RegisterBankAccountController {
                 .isValid(true)
                 .build();
 
+        RegisteredBankAccount registeredBankAccount = registeredBankAccountUseCase.registerBankAccount(command);
+        if(registeredBankAccount == null) {
+            // ToDo : Error Handling
+            return null;
+        }
+
         return registeredBankAccountUseCase.registerBankAccount(command);
     }
 

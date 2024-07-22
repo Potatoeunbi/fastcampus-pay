@@ -14,7 +14,7 @@ apply plugin: 'java-library'
 apply plugin: 'io.spring.dependency-management'
 
 group 'com.fastcampuspay.banking'
-version '1.0.2'
+version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()

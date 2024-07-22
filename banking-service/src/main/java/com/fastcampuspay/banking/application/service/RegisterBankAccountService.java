@@ -33,6 +33,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
         // 은행 계좌를 등록해야하는 서비스 (비즈니스 로직)
 
         // (멤버 서비스도 확인?) 여기서는 skip
+        //command.getMembershipId()
 
         // 1. 등록된 계좌인지 확인한다.
         // 외부의 은행에 이 계좌 정산인지? 확인을 해야해요.
@@ -40,9 +41,6 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
         // Port -> Adapter -> External System 포트와 어댑터로 나가야지 그게 hexagonal architecture
 
         // Port를 먼저 정의. -> 이 비즈니스 로직에서 어떤 인터페이스를 구현하는 구현체인 어댑터가 필요한데 그걸 포트를 통해서 구현.
-
-        command.getBankName();
-        command.getBankAccountNumber();
 
         BankAccount accountInfo = requestBankAccountInfoPort.getBankAccountInfo(new GetBankAccountRequest(command.getBankName(), command.getBankAccountNumber()));
         boolean accountIsValid = accountInfo.isValid();

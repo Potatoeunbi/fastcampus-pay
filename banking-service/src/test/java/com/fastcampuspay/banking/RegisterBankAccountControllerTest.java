@@ -1,6 +1,7 @@
 package com.fastcampuspay.banking;
 
 
+import com.fastcampuspay.banking.adapter.in.web.RegisterBankAccountRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,22 +38,12 @@ public class RegisterBankAccountControllerTest {
     @Test
     public void testRegisterBankAccount() throws Exception {
 
-//        RegisterMembershipRequest request = new RegisterMembershipRequest("name", "email", "address", false);
-//
-//        Membership membership = Membership.generateMember(
-//                new Membership.MembershipId("1"),
-//                new Membership.MembershipName("name"),
-//                new Membership.MembershipEmail("email"),
-//                new Membership.MembershipAddress("address"),
-//                new Membership.MembershipIsValid(true),
-//                new Membership.MembershipIsCorp(false)
-//        );
-//
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/membership/register")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(mapper.writeValueAsString(request))
-//        ).andExpect(MockMvcResultMatchers.status().isOk())
+        RegisterBankAccountRequest request = new RegisterBankAccountRequest("1", "국민은행", "1234567890", true);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/banking/account/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request))
+        ).andExpect(MockMvcResultMatchers.status().isOk());
 //                .andExpect(MockMvcResultMatchers.content().string(mapper.writeValueAsString(membership)));
     }
 }

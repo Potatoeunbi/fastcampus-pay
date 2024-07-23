@@ -1,5 +1,6 @@
 package com.fastcampuspay.banking.adapter.out.persistence;
 
+import com.fastcampuspay.banking.application.port.out.FindRegisterBankAccountPort;
 import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.PersistenceAdapter;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
  - 출력 모델이 영속성 어댑터가 아니라 애플리케이션 코어에 위치하는 것이 중요하다. */
 @RequiredArgsConstructor
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
-public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAccountPort{
+public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAccountPort, FindRegisterBankAccountPort {
     private final SpringDataRegisteredBankRepository bankAccountRepository;
 
     @Override
@@ -33,5 +34,10 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
                 )
 
         );
+    }
+
+    @Override
+    public RegisteredBankAccountJpaEntity findRegisteredBankAccount(RegisteredBankAccount.BankAccountNumber bankAccountNumber) {
+        return bankAccountRepository.getById(Long.parseLong(bankAccountNumber.getBankAccountNumber()));
     }
 }

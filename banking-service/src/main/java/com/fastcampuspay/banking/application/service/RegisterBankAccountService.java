@@ -8,6 +8,7 @@ import com.fastcampuspay.banking.application.port.in.RegisterBankAccountCommand;
 import com.fastcampuspay.banking.application.port.in.RegisterBankAccountUseCase;
 import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
 import com.fastcampuspay.banking.application.port.out.RequestBankAccountInfoPort;
+import com.fastcampuspay.banking.client.dto.RegisterBankAccountItemServiceClient;
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.UseCase;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
     private final RegisterBankAccountPort registerBankAccontPort;
     private final RegisteredBankAccountMapper mapper;
     private final RequestBankAccountInfoPort requestBankAccountInfoPort;
+    private final RegisterBankAccountItemServiceClient registerBankAccountItemServiceClient;
 
     @Override
     public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command) {
@@ -49,7 +51,11 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
 
         
         if(accountIsValid){
-            
+            RegisteredBankAccount registeredBankAccount = registerBankAccountItemServiceClient.findRegisterBankAccountByBankAccountNumber(command.getBankAccountNumber());
+            if (registeredBankAccount != null) {
+                throw new IllegalArgumentException("Account already exists");
+            }
+
             //등록 정보 저장
             RegisteredBankAccountJpaEntity savedAccountInfo = registerBankAccontPort.createRegisteredBankAccount(
                     new RegisteredBankAccount.MembershipId(command.getMembershipId()+""),

@@ -12,6 +12,8 @@ import com.fastcampuspay.banking.client.dto.RegisterBankAccountItemServiceClient
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.UseCase;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.transaction.Transactional;
 
@@ -31,41 +33,47 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
 
     @Override
     public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command) {
+        try {
+            // 은행 계좌를 등록해야하는 서비스 (비즈니스 로직)
 
-        // 은행 계좌를 등록해야하는 서비스 (비즈니스 로직)
+            // (멤버 서비스도 확인?) 여기서는 skip
+            //command.getMembershipId()
 
-        // (멤버 서비스도 확인?) 여기서는 skip
-        //command.getMembershipId()
+            // 1. 등록된 계좌인지 확인한다.
+            // 외부의 은행에 이 계좌 정산인지? 확인을 해야해요.
+            // Biz Logic -> External System
+            // Port -> Adapter -> External System 포트와 어댑터로 나가야지 그게 hexagonal architecture
 
-        // 1. 등록된 계좌인지 확인한다.
-        // 외부의 은행에 이 계좌 정산인지? 확인을 해야해요.
-        // Biz Logic -> External System
-        // Port -> Adapter -> External System 포트와 어댑터로 나가야지 그게 hexagonal architecture
+            // Port를 먼저 정의. -> 이 비즈니스 로직에서 어떤 인터페이스를 구현하는 구현체인 어댑터가 필요한데 그걸 포트를 통해서 구현.
 
-        // Port를 먼저 정의. -> 이 비즈니스 로직에서 어떤 인터페이스를 구현하는 구현체인 어댑터가 필요한데 그걸 포트를 통해서 구현.
+            BankAccount accountInfo = requestBankAccountInfoPort.getBankAccountInfo(new GetBankAccountRequest(command.getBankName(), command.getBankAccountNumber()));
+            boolean accountIsValid = accountInfo.isValid();
+            // 2. 등록가능한 계좌라면, 등록한다. 성공하면, 등록에 성공한 등록 정보를 리턴
+            // 2-1. 등록가능하지 않은 계좌라면, 에러를 리턴
 
-        BankAccount accountInfo = requestBankAccountInfoPort.getBankAccountInfo(new GetBankAccountRequest(command.getBankName(), command.getBankAccountNumber()));
-        boolean accountIsValid = accountInfo.isValid();
-        // 2. 등록가능한 계좌라면, 등록한다. 성공하면, 등록에 성공한 등록 정보를 리턴
-        // 2-1. 등록가능하지 않은 계좌라면, 에러를 리턴
 
-        
-        if(accountIsValid){
-            RegisteredBankAccount registeredBankAccount = registerBankAccountItemServiceClient.findRegisterBankAccountByBankAccountNumber(command.getBankAccountNumber());
-            if (registeredBankAccount != null) {
-                throw new IllegalArgumentException("Account already exists");
+            if (accountIsValid) {
+                RegisteredBankAccount registeredBankAccount = registerBankAccountItemServiceClient.findRegisterBankAccountByBankAccountNumber(command.getBankAccountNumber());
+                if (registeredBankAccount != null) {
+                    throw new IllegalArgumentException("Account already exists");
+                }
+
+                //등록 정보 저장
+                RegisteredBankAccountJpaEntity savedAccountInfo = registerBankAccontPort.createRegisteredBankAccount(
+                        new RegisteredBankAccount.MembershipId(command.getMembershipId() + ""),
+                        new RegisteredBankAccount.BankName(command.getBankName()),
+                        new RegisteredBankAccount.BankAccountNumber(command.getBankAccountNumber()),
+                        new RegisteredBankAccount.LinkedStatusIsValid(command.isValid())
+                );
+                return mapper.mapToDomainEntity(savedAccountInfo);
+            } else {
+                return null;
             }
 
-            //등록 정보 저장
-            RegisteredBankAccountJpaEntity savedAccountInfo = registerBankAccontPort.createRegisteredBankAccount(
-                    new RegisteredBankAccount.MembershipId(command.getMembershipId()+""),
-                    new RegisteredBankAccount.BankName(command.getBankName()),
-                    new RegisteredBankAccount.BankAccountNumber(command.getBankAccountNumber()),
-                    new RegisteredBankAccount.LinkedStatusIsValid(command.isValid())
-            );
-            return mapper.mapToDomainEntity(savedAccountInfo);
-        }else{
-            return null;
+        }catch(Exception e) {
+            Logger logger = LoggerFactory.getLogger(RegisterBankAccountService.class);
+            logger.error("Error calling account service: ", e);
+            throw new RuntimeException("Error calling account service");
         }
 
     }

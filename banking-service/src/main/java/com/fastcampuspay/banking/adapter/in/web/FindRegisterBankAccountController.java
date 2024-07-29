@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebAdapter
@@ -17,7 +18,7 @@ public class FindRegisterBankAccountController {
 
     private final FindRegisterBankAccountUseCase findRegisterBankAccountUseCase;
     @GetMapping(path = "/banking/account/{bankAccountNumber}")
-    ResponseEntity<RegisteredBankAccount> findRegisterBankAccountByBankAccountNumber(@PathVariable String bankAccountNumber) {
+    public ResponseEntity<RegisteredBankAccount> findRegisterBankAccountByBankAccountNumber(@PathVariable String bankAccountNumber) {
         FindRegisterBankAccountCommand command = FindRegisterBankAccountCommand.builder()
                 .bankAccountNumber(bankAccountNumber)
                 .build();

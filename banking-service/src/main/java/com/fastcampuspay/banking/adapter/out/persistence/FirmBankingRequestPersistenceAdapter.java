@@ -8,6 +8,8 @@ import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @PersistenceAdapter
 /* 영속성 어댑터
  1. 입력을 받는다.
@@ -33,8 +35,14 @@ public class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingP
                 toBankName.getToBankName(),
                 toBankAccountNumber.getToBankAccountNumber(),
                 moneyAmount.getMoneyAmount(),
-                firmBankingStatus.getFirmBankingStatus()
+                firmBankingStatus.getFirmBankingStatus(),
+                UUID.randomUUID()
         ));
         return entity;
+    }
+
+    @Override
+    public FirmBankingRequestJpaEntity modifyFirmBankingRequest(FirmBankingRequestJpaEntity entity) {
+        return firmBankingRequestRepository.save(entity);
     }
 }

@@ -1,7 +1,9 @@
 package com.fastcampuspay.banking.application.service;
 
 import com.fastcampuspay.banking.adapter.out.external.bank.BankAccount;
+import com.fastcampuspay.banking.adapter.out.external.bank.ExternalFirmBankingRequest;
 import com.fastcampuspay.banking.adapter.out.external.bank.GetBankAccountRequest;
+import com.fastcampuspay.banking.adapter.out.persistence.FirmBankingRequestJpaEntity;
 import com.fastcampuspay.banking.adapter.out.persistence.FirmBankingRequestMapper;
 import com.fastcampuspay.banking.adapter.out.persistence.RegisteredBankAccountJpaEntity;
 import com.fastcampuspay.banking.adapter.out.persistence.RegisteredBankAccountMapper;
@@ -39,8 +41,21 @@ public class RequestFirmBankingService implements RequestFirmBankingUseCase {
 
         //Biz Logic
         // 1. 요청에 대해 정보를 먼저 write. "요청" 상태로
+        FirmBankingRequestJpaEntity requestJpaEntity = requestFirmBankingPort.createFirmBankingRequest(
+          new FirmBankingRequest.FromBankName(command.getToBankName()),
+          new FirmBankingRequest.FromBankAccountNumber(command.getFromBankAccountNumber()),
+          new FirmBankingRequest.ToBankName(command.getToBankName()),
+          new FirmBankingRequest.ToBankAccountNumber(command.getToBankAccountNumber()),
+          new FirmBankingRequest.MoneyAmount(command.getMoneyAmount()),
+          new FirmBankingRequest.FirmBankingStatus(0)
+        );
         // 2. 외부 은행에 펌뱅킹 요청
-        requestExternalFirmBankingPort.requestExternalFirmBanking();
+        requestExternalFirmBankingPort.requestExternalFirmBanking(new ExternalFirmBankingRequest(
+                command.getFromBankName(),
+                command.getFromBankAccountNumber(),
+                command.getToBankName(),
+                command.getToBankAccountNumber()
+        ));
         // 3. 결과에 따라서 1번에서 작성했던 FirmBankingRequest 정보를 update
         // 4. 결과를 리턴
 

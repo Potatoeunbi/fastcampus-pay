@@ -3,6 +3,7 @@ package com.fastcampuspay.banking.adapter.out.persistence;
 import com.fastcampuspay.banking.application.port.out.FindRegisterBankAccountPort;
 import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
 import com.fastcampuspay.banking.application.port.out.RequestFirmBankingPort;
+import com.fastcampuspay.banking.domain.FirmBankingRequest;
 import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +23,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
 public class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingPort {
-    private final SpringDataFirmBankingRequestRepository bankAccountRepository;
+    private final SpringDataFirmBankingRequestRepository firmBankingRequestRepository;
 
     @Override
-    public RegisteredBankAccountJpaEntity createRegisteredBankAccount(RegisteredBankAccount.MembershipId membershipId, RegisteredBankAccount.BankName bankName, RegisteredBankAccount.BankAccountNumber bankAccountNumber, RegisteredBankAccount.LinkedStatusIsValid linkedStatusIsValid) {
-        return bankAccountRepository.save(
-                new RegisteredBankAccountJpaEntity(
-                        membershipId.getMembershipId(),
-                        bankName.getBankName(),
-                        bankAccountNumber.getBankAccountNumber(),
-                        linkedStatusIsValid.isLinkedStatusIsValid()
-                )
-
-        );
-    }
-
-    @Override
-    public RegisteredBankAccountJpaEntity findRegisteredBankAccount(RegisteredBankAccount.BankAccountNumber bankAccountNumber) {
-        return bankAccountRepository.getById(Long.parseLong(bankAccountNumber.getBankAccountNumber()));
+    public FirmBankingRequestJpaEntity createFirmBankingRequest(FirmBankingRequest.FromBankName fromBankName, FirmBankingRequest.FromBankAccountNumber fromBankAccountNumber, FirmBankingRequest.ToBankName toBankName, FirmBankingRequest.ToBankAccountNumber toBankAccountNumber, FirmBankingRequest.MoneyAmount moneyAmount, FirmBankingRequest.FirmBankingStatus firmBankingStatus) {
+        FirmBankingRequestJpaEntity entity = firmBankingRequestRepository.save(new FirmBankingRequestJpaEntity(
+                fromBankName.getFromBankName(),
+                fromBankAccountNumber.getFromBankAccountNumber(),
+                toBankName.getToBankName(),
+                toBankAccountNumber.getToBankAccountNumber(),
+                moneyAmount.getMoneyAmount(),
+                firmBankingStatus.getFirmBankingStatus()
+        ));
+        return entity;
     }
 }

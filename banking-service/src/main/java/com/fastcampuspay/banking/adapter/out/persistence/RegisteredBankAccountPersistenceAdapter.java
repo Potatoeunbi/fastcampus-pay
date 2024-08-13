@@ -38,6 +38,7 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
 
     @Override
     public RegisteredBankAccountJpaEntity findRegisteredBankAccount(RegisteredBankAccount.BankAccountNumber bankAccountNumber) {
-        return bankAccountRepository.getById(Long.parseLong(bankAccountNumber.getBankAccountNumber()));
+        RegisteredBankAccountJpaEntity entity = bankAccountRepository.findByBankAccountNumber(bankAccountNumber.getBankAccountNumber());
+        return entity;
     }
 }

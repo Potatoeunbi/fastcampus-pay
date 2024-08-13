@@ -55,7 +55,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
             if (accountIsValid) {
                 RegisteredBankAccount registeredBankAccount = registerBankAccountItemServiceClient.findRegisterBankAccountByBankAccountNumber(command.getBankAccountNumber());
                 if (registeredBankAccount != null) {
-                    throw new IllegalArgumentException("Account already exists");
+                    return null;
                 }
 
                 //등록 정보 저장

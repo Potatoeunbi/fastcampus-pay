@@ -21,6 +21,9 @@ public class FindRegisterBankAccountService implements FindRegisterBankAccountUs
     @Override
     public RegisteredBankAccount findRegisteredBankAccount(FindRegisterBankAccountCommand command) {
         RegisteredBankAccountJpaEntity entity = findRegisterBankAccountPort.findRegisteredBankAccount( new RegisteredBankAccount.BankAccountNumber(command.getBankAccountNumber()));
+        if (entity == null) {
+            return null;
+        }
         return mapper.mapToDomainEntity(entity);
     }
 }

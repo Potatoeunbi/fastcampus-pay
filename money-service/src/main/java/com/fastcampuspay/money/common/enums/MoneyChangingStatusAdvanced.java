@@ -1,4 +1,4 @@
-package com.fastcampuspay.money.common;
+package com.fastcampuspay.money.common.enums;
 
 import lombok.Getter;
 

@@ -1,5 +1,7 @@
 package com.fastcampuspay.money.domain;
 
+import com.fastcampuspay.money.common.enums.MoneyChangingStatusAdvanced;
+import com.fastcampuspay.money.common.enums.MoneyChangingType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,23 +15,14 @@ public class MoneyChangingRequest {
     @Getter private final String moneyChangingRequestId;
     //어떤 고객이 증/감액 요청을 했는지의 멤버 정보
     @Getter private final String targetMembershipId;
-    @Getter private final ChangingType changingType; //enum. 0:증액, 1:감액
+    @Getter private final MoneyChangingType changingMoneyType; //enum. 0:증액, 1:감액
 
-    enum ChangingType {
-        INCREASING, DECREASING
-    }
 
     //증액 또는 감액 요청의 금액
     @Getter private final int changingMoneyAmount;
     //머니 변액 요청에 대한 상태
-    @Getter private final ChangingMoneyStatus changingMoneyStatus; //enum
+    @Getter private final MoneyChangingStatusAdvanced changingMoneyStatus; //enum
 
-    enum ChangingMoneyStatus {
-        REQUESTED,
-        SUCCEEDED,
-        FAILED,
-        CANCELLED
-    }
     @Getter private final String uuid;
     @Getter private final Date createdAt;
 
@@ -37,20 +30,20 @@ public class MoneyChangingRequest {
     // member 정의
     // getter, setter @Data
 
-    public static MoneyChangingRequest generateRegisteredBankAccount(
+    public static MoneyChangingRequest generateMoneyChangingRequest(
             MoneyChangingRequestId moneyChangingRequestId,
             TargetMembershipId targetMembershipId,
-            MoneyChangingType moneyChangingType,
+            ChangingMoneyType changingMoneyType,
             ChangingMoneyAmount changingMoneyAmount,
-            MoneyChangingStatus moneyChangingStatus,
+            ChangingMoneyStatus changingMoneyStatus,
             Uuid uuid
     ) {
         return new MoneyChangingRequest(
             moneyChangingRequestId.getMoneyChangingRequestId(),
                 targetMembershipId.getTargetMembershipId(),
-                moneyChangingType.getChangingType(),
-                Integer.parseInt(changingMoneyAmount.getChangingMoneyAmount()),
-                moneyChangingStatus.getChangingMoneyStatus(),
+                changingMoneyType.getChangingMoneyType(),
+                changingMoneyAmount.getChangingMoneyAmount(),
+                changingMoneyStatus.getChangingMoneyStatus(),
                 uuid.getUuid(),
                 new Date()
         );
@@ -75,30 +68,30 @@ public class MoneyChangingRequest {
     }
 
     @Value
-    public static class MoneyChangingType {
-        public MoneyChangingType(ChangingType value) {
-            this.changingType = value;
+    public static class ChangingMoneyType {
+        public ChangingMoneyType(MoneyChangingType value) {
+            this.changingMoneyType = value;
         }
 
-        ChangingType changingType;
+        MoneyChangingType changingMoneyType;
     }
 
     @Value
     public static class ChangingMoneyAmount {
-        public ChangingMoneyAmount(String value) {
+        public ChangingMoneyAmount(int value) {
             this.changingMoneyAmount = value;
         }
 
-        String changingMoneyAmount;
+        int changingMoneyAmount;
     }
 
     @Value
-    public static class MoneyChangingStatus {
-        public MoneyChangingStatus(ChangingMoneyStatus value) {
+    public static class ChangingMoneyStatus {
+        public ChangingMoneyStatus(MoneyChangingStatusAdvanced value) {
             this.changingMoneyStatus = value;
         }
 
-        ChangingMoneyStatus changingMoneyStatus;
+        MoneyChangingStatusAdvanced changingMoneyStatus;
     }
 
     @Value

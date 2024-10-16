@@ -1,16 +1,11 @@
 package com.fastcampuspay.money.application.service;
 
-import com.fastcampuspay.banking.adapter.out.external.bank.BankAccount;
-import com.fastcampuspay.banking.adapter.out.external.bank.GetBankAccountRequest;
-import com.fastcampuspay.banking.adapter.out.persistence.RegisteredBankAccountJpaEntity;
-import com.fastcampuspay.banking.adapter.out.persistence.RegisteredBankAccountMapper;
-import com.fastcampuspay.banking.application.port.in.RegisterBankAccountCommand;
-import com.fastcampuspay.banking.application.port.in.RegisterBankAccountUseCase;
-import com.fastcampuspay.banking.application.port.out.RegisterBankAccountPort;
-import com.fastcampuspay.banking.application.port.out.RequestBankAccountInfoPort;
-import com.fastcampuspay.banking.client.dto.RegisterBankAccountItemServiceClient;
-import com.fastcampuspay.banking.domain.RegisteredBankAccount;
 import com.fastcampuspay.common.UseCase;
+import com.fastcampuspay.money.adapter.out.persistence.MoneyChangingRequestMapper;
+import com.fastcampuspay.money.application.port.in.IncreaseMoneyRequestCommand;
+import com.fastcampuspay.money.application.port.in.IncreaseMoneyRequestUseCase;
+import com.fastcampuspay.money.application.port.out.IncreaseMoneyPort;
+import com.fastcampuspay.money.domain.MoneyChangingRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,57 +19,29 @@ import javax.transaction.Transactional;
  1. 설명 : 클래스 단위 혹은 메서드 단위에 선언해주면 된다.
  2. 우선순위 : 클래스 메소드 -> 클래스 -> 인터페이스 메소드 -> 인터페이스
  */
-public class IncreaseMoneyRequestService implements RegisterBankAccountUseCase {
+public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
 
-    private final RegisterBankAccountPort registerBankAccontPort;
-    private final RegisteredBankAccountMapper mapper;
-    private final RequestBankAccountInfoPort requestBankAccountInfoPort;
-    private final RegisterBankAccountItemServiceClient registerBankAccountItemServiceClient;
+    private final IncreaseMoneyPort increaseMoneyPort;
+    private final MoneyChangingRequestMapper mapper;
 
     @Override
-    public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command) {
-        try {
-            // 은행 계좌를 등록해야하는 서비스 (비즈니스 로직)
+    public MoneyChangingRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
 
-            // (멤버 서비스도 확인?) 여기서는 skip
-            //command.getMembershipId()
+        //머니의 충전.증액이라느 과정
+        // 1. 고객 정보가 정상인지 확인
 
-            // 1. 등록된 계좌인지 확인한다.
-            // 외부의 은행에 이 계좌 정산인지? 확인을 해야해요.
-            // Biz Logic -> External System
-            // Port -> Adapter -> External System 포트와 어댑터로 나가야지 그게 hexagonal architecture
+        // 2. 고객의 연동된 계좌가 있는지, 그리고 정상적인지 확인, 고객의 연동된 계좌의 잔액이 충분한지도 확인
 
-            // Port를 먼저 정의. -> 이 비즈니스 로직에서 어떤 인터페이스를 구현하는 구현체인 어댑터가 필요한데 그걸 포트를 통해서 구현.
+        // 3. 법인 계좌 상태도 정상인지 확인
 
-            BankAccount accountInfo = requestBankAccountInfoPort.getBankAccountInfo(new GetBankAccountRequest(command.getBankName(), command.getBankAccountNumber()));
-            boolean accountIsValid = accountInfo.isValid();
-            // 2. 등록가능한 계좌라면, 등록한다. 성공하면, 등록에 성공한 등록 정보를 리턴
-            // 2-1. 등록가능하지 않은 계좌라면, 에러를 리턴
+        // 4. 증액을 위한 "기록". 요청 상태로 MoneyChangingRequest를 생성한다.
 
+        // 5. 펌뱅킹을 수행하고 (고객의 연동된 계좌 -> 패캠페이 법인 계좌)
 
-            if (accountIsValid) {
-                RegisteredBankAccount registeredBankAccount = registerBankAccountItemServiceClient.findRegisterBankAccountByBankAccountNumber(command.getBankAccountNumber());
-                if (registeredBankAccount != null) {
-                    return null;
-                }
+        // 6-1. 결과가 정상적이라면. 성공으로 MoneyChangingRequest 상태값을 변동 후에 리턴
 
-                //등록 정보 저장
-                RegisteredBankAccountJpaEntity savedAccountInfo = registerBankAccontPort.createRegisteredBankAccount(
-                        new RegisteredBankAccount.MembershipId(command.getMembershipId() + ""),
-                        new RegisteredBankAccount.BankName(command.getBankName()),
-                        new RegisteredBankAccount.BankAccountNumber(command.getBankAccountNumber()),
-                        new RegisteredBankAccount.LinkedStatusIsValid(command.isValid())
-                );
-                return mapper.mapToDomainEntity(savedAccountInfo);
-            } else {
-                return null;
-            }
+        // 6-2. 결과가 실패라면, 실패라고 MoneyChangingRequest 상태값을 변동 후에 리턴
 
-        }catch(Exception e) {
-            Logger logger = LoggerFactory.getLogger(IncreaseMoneyRequestService.class);
-            logger.error("Error calling account service: ", e);
-            throw new RuntimeException("Error calling account service");
-        }
-
+        return null;
     }
 }

@@ -30,10 +30,11 @@ public class RequestMoneyChangingController {
                 .amount(request.getAmount())
                 .build();
 
-        MoneyChangingRequest moneyChangingRequest = ;
+        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequest(command);
         // MoneyChangingRequest -> MoneyChangingResultDetail
 
-        return increaseMoneyRequestUseCase.increaseMoneyRequest(command);
+        MoneyChangingResultDetail resultDetail = new MoneyChangingResultDetail();
+        return resultDetail;
     }
 
     @PostMapping(path = "/money/decrease")

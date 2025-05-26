@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +19,6 @@ import java.util.UUID;
 public class MoneyChangingRequestJpaEntity {
     @Id
     @GeneratedValue
-    //@Generated 알아서 jpa가 관리해줌.
     private Long moneyChangingRequestId;
 
     private String targetMembershipId;
@@ -28,7 +28,7 @@ public class MoneyChangingRequestJpaEntity {
     private int moneyAmount;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp timestamp;
+    private Date timestamp;
 
     private MoneyChangingStatusAdvanced changingMoneyStatus;
 

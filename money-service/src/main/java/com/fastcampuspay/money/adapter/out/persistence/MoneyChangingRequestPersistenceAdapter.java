@@ -2,10 +2,12 @@ package com.fastcampuspay.money.adapter.out.persistence;
 
 import com.fastcampuspay.common.PersistenceAdapter;
 import com.fastcampuspay.money.application.port.out.IncreaseMoneyPort;
+import com.fastcampuspay.money.domain.MemberMoney;
 import com.fastcampuspay.money.domain.MoneyChangingRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @PersistenceAdapter
@@ -24,6 +26,7 @@ import java.util.UUID;
 //@RequiredArgsConstructor 생성자 주입 함수가 굳이 필요없게 됨.
 public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort {
     private final SpringDataMoneyChangingRequestRepository moneyChangingRequestRepository;
+    private final SpringDataMemberMoneyRepository memberMoneyRepository;
 
 
     @Override
@@ -38,9 +41,26 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
                         changingMoneyType.getChangingMoneyType(),
                         changingMoneyAmount.getChangingMoneyAmount(),
                         new Timestamp(System.currentTimeMillis()),
-                        changingMoneyStatus.getChangingMoneyStatus(),
+                        changingMoneyStatus.getChangingMoneyStatus().getTitle(),
                         UUID.randomUUID()
                 )
         );
+    }
+
+    @Override
+    public MemberMoneyJpaEntity increaseMoney(MemberMoney.MembershipId memberId, int increaseMoneyAmount) {
+        MemberMoneyJpaEntity entity;
+        try {
+            entity =  memberMoneyRepository.getById(Long.parseLong(memberId.getMembershipId()));
+            entity.setBalance(entity.getBalance() + increaseMoneyAmount);
+            return  memberMoneyRepository.save(entity);
+        } catch (Exception e){
+            entity = new MemberMoneyJpaEntity(
+                    Long.parseLong(memberId.getMembershipId()),
+                    increaseMoneyAmount
+            );
+            return memberMoneyRepository.save(entity);
+        }
+
     }
 }

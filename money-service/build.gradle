@@ -48,7 +48,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation project(path: ':common')
     testImplementation 'junit:junit:4.13.1'
-//    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
 
     runtimeOnly 'mysql:mysql-connector-java'
     // implementation group 'org.axonframework', name : 'axon-configuration', version: "$axonVersion"
@@ -60,14 +60,14 @@ dependencies {
 //    maxHeapSize = "1024m" //원하는 만큼 변경
 //}
 
-docker {
-    println(tasks.bootJar.outputs.files)
-    //이미지 이름
-    name rootProject.name+'-'+project.name+':'+version
-    //어떤 Dockerfile
-    dockerfile file("../Dockerfile")
-    // 어떤 파일들을 Dockerfile에 복사할 것인가
-    files tasks.bootJar.outputs.files
-    // Docker에 전달한 인자
-    buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
-}
+//docker {
+//    println(tasks.bootJar.outputs.files)
+//    //이미지 이름
+//    name rootProject.name+'-'+project.name+':'+version
+//    //어떤 Dockerfile
+//    dockerfile file("../Dockerfile")
+//    // 어떤 파일들을 Dockerfile에 복사할 것인가
+//    files tasks.bootJar.outputs.files
+//    // Docker에 전달한 인자
+//    buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
+//}

@@ -3,6 +3,8 @@ package com.fastcampuspay.money.adapter.in.web;
 import com.fastcampuspay.common.WebAdapter;
 import com.fastcampuspay.money.application.port.in.IncreaseMoneyRequestCommand;
 import com.fastcampuspay.money.application.port.in.IncreaseMoneyRequestUseCase;
+import com.fastcampuspay.money.common.enums.MoneyChangingStatusAdvanced;
+import com.fastcampuspay.money.common.enums.MoneyChangingType;
 import com.fastcampuspay.money.domain.MoneyChangingRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +35,12 @@ public class RequestMoneyChangingController {
         MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequest(command);
         // MoneyChangingRequest -> MoneyChangingResultDetail
 
-        MoneyChangingResultDetail resultDetail = new MoneyChangingResultDetail();
+        MoneyChangingResultDetail resultDetail = new MoneyChangingResultDetail(
+                moneyChangingRequest.getMoneyChangingRequestId(),
+                MoneyChangingType.INCREASE,
+                MoneyChangingStatusAdvanced.SUCCEEDED,
+                moneyChangingRequest.getChangingMoneyAmount()
+        );
         return resultDetail;
     }
 
